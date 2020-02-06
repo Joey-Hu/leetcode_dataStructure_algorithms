@@ -1,11 +1,11 @@
 package datastructure2;
 
 
+import datastructure.Array;
+
 import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.nio.file.Path;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * @author: huhao
@@ -241,10 +241,12 @@ public class BinarySearchTree<E extends Comparable<E>> {
      */
     public void postOrderNR(){
         Stack<Node> stack = new Stack<>();
-        Stack<Integer> stack2 = new Stack<>();    //辅助栈，用来判断子节点返回父节点时处于左节点还是右节点
-
-        int left = 1;    //在辅助栈里表示左节点
-        int right = 2;    //在辅助栈里表示右节点
+        //辅助栈，用来判断子节点返回父节点时处于左节点还是右节点
+        Stack<Integer> stack2 = new Stack<>();
+        //在辅助栈里表示左节点
+        int left = 1;
+        //在辅助栈里表示右节点
+        int right = 2;
 
         Node cur = root;
 
@@ -291,18 +293,170 @@ public class BinarySearchTree<E extends Comparable<E>> {
         }
     }
 
+    /**
+     * 寻找整个二分搜索树的最小元素
+     * @return
+     */
+    public E minimum(){
+        if(size == 0){
+            throw new IllegalArgumentException("BST is empty.");
+        }
+        return minimum(root).e;
+    }
+
+    /**
+     * 返回以node为根节点的BST的最小值所在的节点
+     * @param node
+     * @return
+     */
+    private Node minimum(Node node){
+        if(node.left == null){
+            return node;
+        }else{
+            return minimum(node.left);
+        }
+    }
+
+    /**
+     * 寻找整个二分搜索树的最大元素
+     * @return
+     */
+    public E maximum(){
+        if(size == 0){
+            throw new IllegalArgumentException("BST is empty.");
+        }
+        return maximum(root).e;
+    }
+
+    /**
+     * 返回以node为根节点的BST的最大值所在的节点
+     * @param node
+     * @return
+     */
+    private Node maximum(Node node){
+        if(node.right == null){
+            return node;
+        }else{
+            return maximum(node.right);
+        }
+    }
+
+    /**
+     * 从BST中删除最小值所在的节点，返回最小值
+     * @return
+     */
+    public E removeMin(){
+        E ret = minimum();
+        root = removeMin(root);
+        return ret;
+    }
+
+    /**
+     * 删除以node为根节点的BST中的最小节点，
+     * 返回删除节点后新的二分搜索树的根
+     * @param node
+     * @return
+     */
+    private Node removeMin(Node node){
+        if(node.left == null){
+            Node rightNode = node.right;
+            node.right = null;
+            size--;
+            return rightNode;
+        }
+        node.left = removeMin(node.left);
+        return node;
+    }
+
+    /**
+     * 从BST中删除最大值所在的节点，返回最大值
+     * @return
+     */
+    public E removeMax(){
+        E ret = maximum();
+        root = removeMax(root);
+        return ret;
+    }
+
+    /**
+     * 删除以node为根节点的BST中的最大节点，
+     * 返回删除节点后新的二分搜索树的根
+     * @param node
+     * @return
+     */
+    private Node removeMax(Node node){
+        if(node.right == null){
+            Node leftNode = node.left;
+            node.left = null;
+            size--;
+            return leftNode;
+        }
+        node.right = removeMin(node.right);
+        return node;
+    }
+
+    /**
+     * 从BST中删除元素为e的节点
+     * @param e
+     */
+    public void remove(E e){
+        root = remove(root, e);
+    }
+
+    private Node remove(Node node, E e){
+        if(node == null){
+            return null;
+        }
+        if(e.compareTo(node.e) < 0){
+            remove(node.left, e);
+            return node;
+        }else if(e.compareTo(node.e) > 0){
+            remove(node.right, e);
+            return node;
+        }else{
+            // 待删除节点左子树为空
+            if(node.left == null){
+                Node rightNode = node.right;
+                node.right = null;
+                size--;
+                return rightNode;
+            }
+            // 待删除节点右子树为空
+            if(node.right == null){
+                Node leftNode = node.left;
+                node.left = null;
+                size--;
+                return leftNode;
+            }
+            // 待删除节点左右子树都不为空
+            Node successor = minimum(node.right);
+            successor.right = removeMin(node.right);
+            successor.left = node.left;
+            node.left = node.right = null;
+            return successor;
+        }
+
+    }
+
+
+
 
     public static void main(String[] args) {
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-        int[] nums = {5, 3, 6, 8, 4, 2};
+        Random random = new Random();
 
-        for(int num : nums){
-            bst.add(num);
+        int n = 1000;
+
+        for(int i=0; i<n; i++){
+            bst.add(random.nextInt(10000));
         }
 
-        bst.postOrder();
-        System.out.println("++++++++++");
-        bst.postOrderNR();
+        ArrayList<Integer> nums = new ArrayList<>();
+        while(!bst.isEmpty()){
+            nums.add(bst.removeMin());
+        }
+
+        System.out.println(nums);
     }
 
 
