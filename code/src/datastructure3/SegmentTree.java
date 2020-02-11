@@ -132,7 +132,7 @@ public class SegmentTree<E> {
         }
 
         tree[treeIndex] = merge.merge(tree[leftTreeIndex], tree[rightTreeIndex]);
-    }
+     }
 
     public int size(){
         return data.length;
