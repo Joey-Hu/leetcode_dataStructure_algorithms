@@ -154,7 +154,7 @@ public class Trie {
 **压缩字典树**
 对于只有一条路径的几个节点，可以合并用一个结点来存储。
 
-![“compressed tree”]()
+![“compressed tree”](https://raw.githubusercontent.com/Joey-Hu/leetcode_dataStructure_algorithms/master/images/compressedTrie.png)
 
 优点：节省空间
 缺点：维护成本更高

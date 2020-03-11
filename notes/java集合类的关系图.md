@@ -1,6 +1,6 @@
 ## java中集合类的关系
 
-!["集合类的关系"]()
+!["集合类的关系"](https://raw.githubusercontent.com/Joey-Hu/leetcode_dataStructure_algorithms/master/images/jihelei.png)
 
 
 
